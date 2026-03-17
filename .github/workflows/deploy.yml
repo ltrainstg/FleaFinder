@@ -8,7 +8,6 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-  
     steps:
       # Checkout the repo
         - name: Checkout code
@@ -20,13 +19,13 @@ jobs:
             node-version: 25
       # Install Dependencies
         - name: Install Dependencies
-          uses: npm install
+          run: npm install
       # Build the project
         - name: Build project
-          uses: npm run build
+          run: npm run build
       # Deploy to github pages
         - name: Deploy
           uses: peaceiris/actions-gh-pages@v4
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./public
+            publish_dir: ./build
