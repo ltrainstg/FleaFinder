@@ -1,0 +1,32 @@
+name: FleaFinder
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+  
+    steps:
+      # Checkout the repo
+        - name: Checkout code
+          uses: actions/checkout@v3
+      # Setup node.js
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 25
+      # Install Dependencies
+        - name: Install Dependencies
+          uses: npm install
+      # Build the project
+        - name: Build project
+          uses: npm run build
+      # Deploy to github pages
+        - name: Deploy
+          uses: peaceiris/actions-gh-pages@v4
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./public
