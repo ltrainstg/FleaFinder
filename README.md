@@ -3,7 +3,8 @@ I hope to create a react app here that helps with finding fleas in silksong. Eve
 
 
 # Sources 
-https://www.youtube.com/watch?v=uXiwgO_p0Yg
+This is deprecated apparently a bit old. https://www.youtube.com/watch?v=uXiwgO_p0Yg
+https://gist.github.com/beveradb/92f9a7a56f761eaf31f3396e5e867f4f
 
 
 
