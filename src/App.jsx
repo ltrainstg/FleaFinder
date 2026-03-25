@@ -5,12 +5,17 @@ import { usePyodide } from "./usePyodide";
 export default function App() {
   const { ready, runPython } = usePyodide();
   const [output, setOutput] = useState("");
+   const [inputValue, setInputValue] = useState(5);
+
 
   const handleRun = async () => {
+
+    // On How to handle variables See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+    
     const result = await runPython(`
       import json
       import random
-      data = random.sample(range(1, 50), 7)
+      data = random.sample(range(1, 50), ${inputValue})
       json.dumps(data)
     `);
     setOutput(result);
@@ -26,6 +31,15 @@ export default function App() {
 
 
       </div>
+      <label>
+        Text input:{" "}
+        <input
+          type="number"
+          value={inputValue}
+          onChange={(e) => setInputValue(Number(e.target.value))}
+        />
+      </label>
+
       <button onClick={handleRun} disabled={!ready}>
         {ready ? "Run Python" : "Loading Pyodide..."}
       </button>
