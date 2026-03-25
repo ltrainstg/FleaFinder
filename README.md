@@ -5,9 +5,7 @@ I hope to create a react app here that helps with finding fleas in silksong. Eve
 # Sources 
 
 YAML source: https://vite.dev/guide/static-deploy
-
-
-
+GH-page source: https://www.youtube.com/watch?v=tQ94k7Qop1s
 
 ## Steps 
 
