@@ -4,47 +4,28 @@ import { useState } from "react";
 import { usePyodide } from "./usePyodide";
 import FleaButton from "./FleaButton";
 
+import flea_links from "./assets/flea_links";
+import FleaTable from "./FleaTable";
+
 export default function App() {
   const { ready, runPython, setGlobal, getGlobal } = usePyodide();
-  const [output, setOutput] = useState("");
+
   const [inputValue, setInputValue] = useState(5);
   const [fileContent, setFileContent] = useState('');
-  const [foundFleas, setFoundFleas] = useState("0");
+  const [foundFleas, setFoundFleas] = useState(0);
 
 
   const data = [
-    { id: 1, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 2, name: 'Apple', found: true, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 3, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 4, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 5, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 6, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 7, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 8, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 9, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 10, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 11, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 12, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 13, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 14, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 15, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 16, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 17, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 18, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 19, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 20, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 21, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 22, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 23, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 24, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 25, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 26, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 27, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 28, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 29, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
-    { id: 30, name: 'Apple', found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' }
+    { id: 1, found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
+    { id: 2, found: true, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
+    { id: 3, found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
+    { id: 4, found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' },
+    { id: 5, found: false, link: 'https://mapgenie.io/hollow-knight-silksong/maps/pharloom' }
 
   ];
+  const [output, setOutput] = useState(
+    // data
+  )
 
 
   const handleFileChange = (event) => {
@@ -55,23 +36,25 @@ export default function App() {
       reader.onload = async (e) => {
         const arrayBuffer = e.target.result;
         const bytes = new Uint8Array(arrayBuffer);
-        setGlobal("ciphertext_bytes", bytes);   // ✅ available to all components
- 
-
+        setGlobal("ciphertext_bytes", bytes);
+        setGlobal("flea_links", flea_links);
 
         const decrypted = await runPython(`
               import json 
               import base64
               from Crypto.Cipher import AES
+              from functools import reduce
               c_sharp_header = bytes.fromhex('0001000000FFFFFFFF01000000000000000601000000')
               aes_key = b'UKu52ePUBwetZ9wNX88o54dnfKRu0T1l'
 
-              print('Get Data')
-              print('ciphertext_bytes')
-              print(ciphertext_bytes)
+              # print('Get Data')
+              # print('ciphertext_bytes')
+              # print(ciphertext_bytes)
               ciphertext = bytes(ciphertext_bytes.to_py())
-              print(type(ciphertext))
-
+              # print(type(ciphertext))
+              flea_links = flea_links.to_py()
+              # print(flea_links)
+              # print(type(flea_links))
               def create_cipher():
                   return AES.new(aes_key, AES.MODE_ECB)
 
@@ -86,15 +69,67 @@ export default function App() {
                   bytes_ = cipher.decrypt(bytes_)
                   # finally remove padding
                   return bytes_[:-bytes_[-1]]
+
+              def get27Fleas(json_data):
+                flea_data = []
+                for key1 in json_data:
+                    for key2 in json_data[key1]:
+                        if('SavedFlea' in key2):
+                            flea_data.append({key2: json_data[key1][key2]})
+                      
+                return flea_data
+
+              def getGiantFlea(json_data):
+                return {'tamedGiantFlea': json_data['playerData']['tamedGiantFlea']}
+
+              def getVogg(json_data):
+                  for item in json_data['sceneData']['persistentBools']['serializedList']:
+                      if(item['ID'] == 'Caravan Troupe Hunter'):
+                          return {'vogg':  item['Value']}
+                  return {'vogg':  item['Value']}
+
+
+              def getKratt(json_data):
+                for item in json_data['sceneData']['persistentBools']['serializedList']:
+                    if(item['ID'] == 'Caravan Lech'):
+                        return {'kratt':  item['Value']}
+                return {'kratt': False}
+
+
+              def getResult30Flea(json_data):
+                  Flea_30 = get27Fleas(json_data)
+                  Flea_30.append(getGiantFlea(json_data))
+                  Flea_30.append(getVogg(json_data))
+                  Flea_30.append(getKratt(json_data))  
+                  Flea_30 = reduce(lambda a, b: dict(a, **b), Flea_30)
+
+                  results = []
+                  for item in flea_links:
+                      result_item = item
+                      result_item['found'] = Flea_30[item['id']]
+                      results.append(result_item)
+                  return results
+
+
               data_as_bytes = decode_and_decrypt(ciphertext)
+              # print(data_as_bytes)
+              dict_ = json.loads(data_as_bytes)
+              str_to_write = json.dumps(dict_, indent=2, sort_keys=False)
+              json_data = json.loads(str_to_write)
+              # print(json_data)
 
 
-              print(data_as_bytes)
+              Flea_30 = getResult30Flea(json_data)
+              # print(Flea_30)
+              flea_count = 0
+              for item in Flea_30:
+                if item["found"]:
+                  flea_count = flea_count+1
 
-
+              json.dumps({"output":Flea_30, "N": flea_count})
       `);
-
-        // setOutput(decrypted);
+        setOutput(JSON.parse(decrypted)['output']);
+        setFoundFleas(JSON.parse(decrypted)['N']);
       };
 
 
@@ -111,26 +146,23 @@ export default function App() {
     // On How to handle variables See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
 
     const result = await runPython(`
-      import json
       import random
-      import base64
-      from Crypto.Cipher import AES
-      c_sharp_header = bytes.fromhex('0001000000FFFFFFFF01000000000000000601000000')
-      end_header = bytes([11])
-      aes_key = b'UKu52ePUBwetZ9wNX88o54dnfKRu0T1l'
-
-      cypher = AES.new(aes_key, AES.MODE_ECB)
-      decrypted = "asd"
-      data_as_bytes = read_binary_file(${fileContent})
-      print(data_as_bytes)
-
       data = random.sample(range(1, 50), ${inputValue})
-
       json.dumps(data)
     `);
     setOutput(result);
     setFoundFleas(result);
   };
+
+
+
+  const link_style = {
+    color: 'white',
+
+
+
+  };
+
 
   return (
 
@@ -138,48 +170,54 @@ export default function App() {
       <h1> FleaFinder</h1>
       <div>
         <h3>
-          This is a project app to mostly see how piodide runs in react.
-          A javascript version of this apps already exists and inspired this app.
-          See https://github.com/mikkerlo/silksong-flea.
-          Currently a bunch of pieces, but not a coherent app yet.
-
+          This app takes the PC version of silksong from the *.dat files and tells you how many and which of the 30 fleas are found/missing.
+          <br />
+          This app uses react and piodide to run python on the client side to parse the file so it can be hosted on github pages.
+          <br />
+          Inspired by:
+          <a style={link_style} href="https://mikkerlo.github.io/silksong-flea/" rel="noreferrer">
+            mikkerlo's silksong-flea app
+          </a>
+          <br />
+          You can view the source code in the :
+          <a style={link_style} href="https://github.com/ltrainstg/FleaFinder" rel="noreferrer">
+            GitHub repository
+          </a>
+          <br />
         </h3>
+      </div>
+
+      <div>
+
 
 
 
       </div>
 
 
-      <label>
-        <div>
-          <input type="file" accept=".txt" onChange={handleFileChange} />
-          <h3>File Content:</h3>
-          <p>{fileContent}</p>
-        </div>
-      </label>
 
+      <div>
+        <input type="file" accept=".dat" onChange={handleFileChange} />
+        {/* <h3>File Content:</h3>
+          <p>{fileContent}</p> */}
+      </div>
+
+      {/* 
       <button onClick={handleRun} disabled={!ready}>
 
 
         {ready ? "Run Python" : "Loading Pyodide..."}
 
 
-      </button>
-      <h3>{output}</h3>
+      </button> */}
 
 
 
-      <h1>Fleas:{foundFleas}/30</h1>
 
-      <div className="grid-container">
+      <h1>Found Fleas:{foundFleas}/30</h1>
+      <FleaTable data={output}> </FleaTable>
 
-        {data.map((item) => (
 
-          <FleaButton key={item.id} name={item.name} id={item.id} found={item.found} link={item.link} />
-
-        ))}
-
-      </div>
 
     </div>
 

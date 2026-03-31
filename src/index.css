@@ -89,7 +89,8 @@ p {
   font-size: 16px; /* Increase font size */
   margin: 4px 2px; /* Adds some margin */
   cursor: pointer; /* Change cursor on hover */
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 100px; /* Rounded corners */
+  flex: 1;
 }
 
 /* Add hover effect for better user experience */
